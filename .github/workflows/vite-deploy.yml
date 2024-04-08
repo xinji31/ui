@@ -22,5 +22,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Vite Github Pages Deployer
-        uses: skywarth/vite-github-pages-deployer@v1.3.0
+        uses: xinji31/vite-github-pages-deployer@v2
         id: deploy_to_pages
