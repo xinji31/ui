@@ -115,6 +115,14 @@ export function element(tagName) {
 }
 
 HTMLElement.prototype.attr = function (attributes) {
+  if (this._cumc === undefined) {
+    this._cumc = {
+      attributeBindings: {},
+      childrenBindings: [],
+    }
+  }
+  this._cumc.attributes = attributes
+
   if (attributes) {
     if (attributes instanceof Box) {
       bindAttributes(this, attributes.value)
@@ -130,6 +138,14 @@ HTMLElement.prototype.attr = function (attributes) {
 }
 
 HTMLElement.prototype.sub = function (...children) {
+  if (this._cumc === undefined) {
+    this._cumc = {
+      attributeBindings: {},
+      childrenBindings: [],
+    }
+  }
+  this._cumc.children = children
+
   bindChildren(this, children)
   return this
 }
