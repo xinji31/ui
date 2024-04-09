@@ -107,8 +107,12 @@ export class BoxComputed extends Box {
       ref._dependents.delete(this._weakThis);
     }
     let valueNew = this._valueFunc((box) => {
-      this._dependencies.add(box);
-      return box.value;
+      if (box instanceof Box) {
+        this._dependencies.add(box)
+        return box.value
+      } else {
+        return box
+      }
     });
     for (const ref of this._dependencies) {
       ref._dependents.add(this._weakThis);
