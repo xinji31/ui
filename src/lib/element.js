@@ -36,6 +36,7 @@ function removeAttribute(element, key, value) {
  * @param {Object} attr 
  */
 function bindAttributes(element, attr) {
+  element._cumc.attributes = attr
   for (const key in attr) {
     const value = attr[key]
     if (value instanceof Box) {
@@ -52,6 +53,7 @@ function bindAttributes(element, attr) {
 }
 
 function unbindAttributes(element, attr) {
+  element._cumc.attributes = undefined
   for (const key in attr) {
     const value = attr[key]
     if (value instanceof Box) {
@@ -86,7 +88,8 @@ function setChild(element, id, child) {
  * @param {HTMLElement|String} element 
  * @param {Any} children 
  */
-export function bindChildren(element, children) {
+function bindChildren(element, children) {
+  element._cumc.children = children
   for (const id in children) {
     const value = children[id]
     if (value instanceof Box) {
@@ -121,18 +124,15 @@ HTMLElement.prototype.attr = function (attributes) {
       childrenBindings: [],
     }
   }
-  this._cumc.attributes = attributes
 
-  if (attributes) {
-    if (attributes instanceof Box) {
-      bindAttributes(this, attributes.value)
-      attributes.addWeakBind(this, (ref, valueOld, valueNew) => {
-        unbindAttributes(ref, valueOld)
-        bindAttributes(ref, valueNew)
-      })
-    } else {
-      bindAttributes(this, attributes)
-    }
+  if (attributes instanceof Box) {
+    bindAttributes(this, attributes.value)
+    attributes.addWeakBind(this, (ref, valueOld, valueNew) => {
+      unbindAttributes(ref, valueOld)
+      bindAttributes(ref, valueNew)
+    })
+  } else {
+    bindAttributes(this, attributes)
   }
   return this
 }
@@ -144,7 +144,6 @@ HTMLElement.prototype.sub = function (...children) {
       childrenBindings: [],
     }
   }
-  this._cumc.children = children
 
   bindChildren(this, children)
   return this
