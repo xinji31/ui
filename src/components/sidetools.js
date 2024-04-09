@@ -5,7 +5,7 @@ const buttonLink = href => e("button").attr({
   click: () => location.hash = "#" + href,
   class: "circular ui icon button",
   style: flatCss({
-    "font-size": "1.5em",
+    fontSize: "1.5em",
     margin: "0.5em",
     color: "#008a83",
   }),
