@@ -22,7 +22,7 @@ export function router(...matchList) {
     for (const [kf, v] of matchList) {
       if (kf(url)) {
         if (v instanceof Function) {
-          return v()
+          return v(url)
         } else {
           return v
         }
