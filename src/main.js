@@ -3,6 +3,7 @@ import { sidetools } from "./components/sidetools"
 import { element as e } from "./lib/element"
 import { router } from "./lib/router"
 import { getArticleTitle, getArticleBody } from "./components/article"
+import { articleList } from "./components/articleList"
 
 const navigator = {
   home: s => s === "/",
@@ -25,7 +26,7 @@ document.querySelector("#app").sub(
     pageTitle(titleText),
     e("hr").attr({ class: "ui divider" }),
     router(
-      [navigator.home, ""],
+      [navigator.home, articleList()],
       [navigator.publishArticle, "publish article"],
       [navigator.publishDiscuss, "publish discuss"],
       [navigator.viewArticle, (url => getArticleBody(url.split("/")[3]))],
