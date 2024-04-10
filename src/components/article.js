@@ -32,6 +32,7 @@ export function getArticleBody(db, id) {
           style: flatCss({
             width: "100%",
             height: "700px",
+            border: "none",
           })
         })
       }
