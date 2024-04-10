@@ -1,4 +1,4 @@
-import { BoxComputed, BoxValue } from "../lib/box"
+import { BoxComputed, BoxValue, boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
 import { parse } from "marked"
 
@@ -25,17 +25,12 @@ export function getArticleBody(id) {
   const srcURL = `https://raw.githubusercontent.com/xinji31/book-test/${art.hash}/${art.path}`
 
   if (type === "md") {
-    const artContent = new BoxValue("loading...");
-    (async () => {
+    return e("div").sub(boxPromise("loading...", (async () => {
       await new Promise(r => setTimeout(r, 1000))
-      artContent.value = await (await fetch(srcURL)).text()
-    })()
-
-    return e("div").sub(new BoxComputed($ => {
       const res = e("div")
-      res.innerHTML = parse($(artContent))
+      res.innerHTML = parse(await (await fetch(srcURL)).text())
       return res
-    }))
+    })()))
   }
   else if (type === "pdf") {
     return e("a").attr({ href: srcURL }).sub("link")

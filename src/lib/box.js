@@ -133,3 +133,17 @@ export class BoxComputed extends Box {
     throw new Error("cannot assigned to computed box")
   }
 }
+
+/**
+ * 
+ * @param {any} val 
+ * @param {Promise} p 
+ * @returns {BoxValue}
+ */
+export function boxPromise(val, p) {
+  const res = new BoxValue(val)
+  p.then(r => {
+    res.value = r
+  })
+  return res
+}
