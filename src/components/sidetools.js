@@ -20,7 +20,7 @@ export function sidetools() {
     e("div").attr({
       class: "sidetools",
       style: flatCss({
-        position: "absolute",
+        position: "fixed",
         bottom: "40px",
         right: "40px",
       })
