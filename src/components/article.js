@@ -3,6 +3,7 @@ import { BoxComputed, BoxValue, boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
 import { parse } from "marked"
 import "github-markdown-css"
+import { flatCss } from "../lib/util"
 
 /**
  * 
@@ -26,7 +27,13 @@ export function getArticleBody(db, id) {
         return res
       }
       else if (type === "pdf") {
-        return e("a").attr({ href: srcURL }).sub("link")
+        return e("iframe").attr({
+          src: `https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/xinji31/book-test/${art.hash}/${art.path}`,
+          style: flatCss({
+            width: "100%",
+            height: "700px",
+          })
+        })
       }
       else {
         return "Not supported file type"
