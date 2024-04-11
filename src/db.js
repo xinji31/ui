@@ -1,33 +1,20 @@
 /**
  * @template T
- * @param {T} getter 
- * @returns {T}
+ * @param {() => Promise<T>} getter 
+ * @returns {Promise<T>}
  */
 function cacheGetter(getter) {
-  let value
-  let requested = false
-  let valid = false
-  let pendingK = []
+  const value = {}
 
-  async function sendRequest(...param) {
-    requested = true
-    value = await getter(...param)
-    valid = true
-    pendingK.forEach(k => k(value))
-    pendingK = null
+  /**
+   * @param {String|undefined} id
+   */
+  return (id) => {
+    if (value[id] === undefined) {
+      value[id] = getter(id)
+    }
+    return value[id]
   }
-
-  return (...param) => new Promise(k => {
-    if (!valid) {
-      pendingK.push(k)
-      if (!requested) {
-        sendRequest(...param)
-      }
-    }
-    else {
-      k(value)
-    }
-  })
 }
 
 export class Database {
@@ -38,20 +25,14 @@ export class Database {
   constructor(baseURL, sourceURL) {
     this.siteInfo = cacheGetter(
       async () => {
-        console.log("load site-info")
         const url = new URL("site-info.json", baseURL)
         return await (await fetch(url)).json()
       }
     )
-    this.rawText = cacheGetter(
-      /**
-       * 
-       * @param {String} path 
-       * @returns {Promise<String>}
-       */
+    this.blob = cacheGetter(
       async (path) => {
         const url = new URL(path, sourceURL)
-        return await (await fetch(url)).text()
+        return await (await fetch(url)).blob()
       }
     )
   }
