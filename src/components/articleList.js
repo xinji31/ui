@@ -1,10 +1,20 @@
 import { Database } from "../db"
 import { boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
+import { flatCss } from "../lib/util"
 
 function articleElement(art) {
   const URL = `#/view/article/${art.hash}`
-  return e("a").attr({ href: URL }).sub(`${art.title} - ${art.author}`)
+  return e("li").attr({
+    click: () => location.hash = URL,
+    class: "ui button",
+    style: flatCss({
+      fontSize: "1em",
+      margin: "0.5em",
+      padding: "0.5em",
+      color: "#008a83",
+    }),
+  }).sub(`${art.title} - ${art.author}`)
 }
 
 /**
@@ -18,8 +28,10 @@ export function articleList(db) {
     (async () => {
       await new Promise(r => setTimeout(r, 1000))
       const si = await db.siteInfo()
-      return e("ul").sub(...si.previewList.map(
-        id => e("li").sub(articleElement(si.articles[id]))
+      return e("ul").attr({
+        class: "ui list"
+      }).sub(...si.previewList.map(
+        id => articleElement(si.articles[id])
       ))
     })()
   ))
