@@ -17,6 +17,7 @@ const navigator = {
   publishArticle: s => s.startsWith("/publish/article"),
   publishDiscuss: s => s.startsWith("/publish/discuss"),
   viewArticle: s => s.startsWith("/view/article"),
+  settings: s => s.startsWith("/settings"),
 }
 
 const titleText = router(
@@ -25,6 +26,7 @@ const titleText = router(
   [navigator.publishDiscuss, "小绿书 - 发布讨论"],
   // [navigator.viewArticle, (url => "小绿书 - " + getArticleTitle(db, url.split("/")[3]))],
   [navigator.viewArticle, (url => "小绿书 - 查看文章")],
+  [navigator.settings, "小绿书 - 设置"],
 )
 document.querySelector("title").sub(titleText)
 
