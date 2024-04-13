@@ -1,12 +1,13 @@
 import { Database } from "../db"
 import { boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
+import { loc } from "../lib/router"
 import { flatCss } from "../lib/util"
 
 function articleElement(art) {
-  const URL = `#/view/article/${art.hash}`
+  const viewArtURL = `/view/article/${art.hash}`
   return e("li").attr({
-    click: () => location.hash = URL,
+    click: () => loc.value = viewArtURL,
     class: "ui button",
     style: flatCss({
       fontSize: "1em",

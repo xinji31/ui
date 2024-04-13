@@ -1,5 +1,5 @@
-import { } from "../lib/element"
 import { GiscusWidget } from "giscus"
+import { loc } from "../lib/router"
 
 /**
  * 
@@ -8,6 +8,7 @@ import { GiscusWidget } from "giscus"
  */
 export function giscuss(giscusId) {
   return new GiscusWidget().attr({
+    id: loc.value,
     repo: "xinji31/book-test",
     repoid: "R_kgDOLq9ULw",
     category: "Announcements",

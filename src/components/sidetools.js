@@ -1,8 +1,9 @@
 import { flatCss } from "../lib/util"
 import { element as e } from "../lib/element"
 import { BoxComputed, BoxValue } from "../lib/box"
+import { loc } from "../lib/router"
 
-const linkTo = href => (() => location.hash = "#" + href)
+const linkTo = href => (() => loc.value = href)
 const icon = name => e("i").attr({
   class: name + " icon",
 })

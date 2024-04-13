@@ -1,10 +1,20 @@
 import { BoxValue, BoxComputed } from "./box";
 import { element } from "./element";
 
-const hash = new BoxValue(location.hash)
+function getLocFromHash() {
+  let u = location.hash.slice(1)
+  if (u === "") {
+    u = "/"
+  }
+  return u
+}
 
+export const loc = new BoxValue(getLocFromHash())
 window.addEventListener("hashchange", () => {
-  hash.value = location.hash
+  loc.value = getLocFromHash()
+})
+loc.addWeakBind(location, (ref, valueOld, valueNew) => {
+  ref.hash = "#" + valueNew
 })
 
 /**
@@ -14,15 +24,11 @@ window.addEventListener("hashchange", () => {
  */
 export function router(...matchList) {
   return new BoxComputed($ => {
-    let url = $(hash).slice(1)
-    if (url == "") {
-      url = "/"
-    }
-
+    let u = $(loc)
     for (const [kf, v] of matchList) {
-      if (kf(url)) {
+      if (kf(u)) {
         if (v instanceof Function) {
-          return v(url)
+          return v(u)
         } else {
           return v
         }
