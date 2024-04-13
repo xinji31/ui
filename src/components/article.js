@@ -30,11 +30,16 @@ export function getArticleBody(db, id) {
         }
         else if (type === "pdf") {
           return e("embed").attr({
-            // src: `https://mozilla.github.io/pdf.js/web/viewer.html?file=https://raw.githubusercontent.com/xinji31/book-test/${art.hash}/${art.path}`,
             src: await (async () => {
-              const blob = await db.blob(`${art.hash}/${art.path}`)
-              const blobURL = URL.createObjectURL(blob.slice(0, blob.size, "application/pdf"))
-              return blobURL + "#toolbar=0&zoom=page-width&view=fitH"
+              const artPath = `${art.hash}/${art.path}`
+              if (db.config.pdfRender === "browser") {
+                const blob = await db.blob(artPath)
+                const blobURL = URL.createObjectURL(blob.slice(0, blob.size, "application/pdf"))
+                return blobURL + "#toolbar=0&zoom=page-width&view=fitH"
+              }
+              else {
+                return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${db.blobURL(artPath)}`
+              }
             })(),
             scrolling: "no",
             style: flatCss({

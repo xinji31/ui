@@ -55,6 +55,7 @@ export class Database {
         return await (await fetch(url)).blob()
       }
     )
+    this.blobURL = (path) => new URL(path, sourceURL)
     this.config = localStorageWrapper({
       gaToken: undefined,
       pdfRender: "browser",
