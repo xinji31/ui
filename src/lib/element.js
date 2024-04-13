@@ -148,3 +148,7 @@ HTMLElement.prototype.sub = function (...children) {
   bindChildren(this, children)
   return this
 }
+
+HTMLElement.prototype.jq = function (name) {
+  return (...p) => jQuery.fn[name].bind(this)(...p)[0]
+}

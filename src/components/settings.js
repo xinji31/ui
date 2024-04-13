@@ -22,9 +22,19 @@ export function settings(db) {
         s.setAttribute("selected", "")
       }
     }
-    return e("select").attr(attr).sub(...sub)
+    return e("select").attr(attr).sub(...sub).jq("dropdown")()
   }
   const option = (value, text) => e("option").attr({ value }).sub(text)
+
+  console.log(
+    dropdown({
+      value: db.config.pdfRender,
+      change: event => db.config.pdfRender = event.target.value
+    })(
+      option("browser", "browser (default)"),
+      option("pdfjs", "pdf.js"),
+    )
+  )
 
   return e("div").attr({
     class: "ui form",
