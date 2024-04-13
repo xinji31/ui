@@ -17,6 +17,26 @@ function cacheGetter(getter) {
   }
 }
 
+/**
+ * @template T
+ * @param {T} attr 
+ * @returns {T}
+ */
+function localStorageWrapper(attr) {
+  const res = {}
+  for (let [k, v] of Object.entries(attr)) {
+    if (window.localStorage.getItem(k) === null && v !== undefined) {
+      console.log("set local", k, v)
+      window.localStorage.setItem(k, v)
+    }
+    Object.defineProperty(res, k, {
+      get: () => window.localStorage.getItem(k),
+      set: v => window.localStorage.setItem(k, v),
+    })
+  }
+  return res
+}
+
 export class Database {
   /**
    * 
@@ -35,5 +55,9 @@ export class Database {
         return await (await fetch(url)).blob()
       }
     )
+    this.config = localStorageWrapper({
+      gaToken: undefined,
+      pdfRender: "browser",
+    })
   }
 }

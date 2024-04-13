@@ -40,7 +40,7 @@ document.querySelector("#app").sub(
       [navigator.publishArticle, "publish article"],
       [navigator.publishDiscuss, "publish discuss"],
       [navigator.viewArticle, (url => getArticleBody(db, url.split("/")[3]))],
-      [navigator.settings, settings],
+      [navigator.settings, () => settings(db)],
     ),
     sidetools(),
   )
