@@ -5,6 +5,7 @@ import { pageTitle } from "./components/pageTitle"
 import { sidetools } from "./components/sidetools"
 import { getArticleBody } from "./components/article"
 import { articleList } from "./components/articleList"
+import { settings } from "./components/settings"
 
 const repo = "book-test"
 const db = new Database(
@@ -35,10 +36,11 @@ document.querySelector("#app").sub(
     pageTitle(titleText),
     e("hr").attr({ class: "ui divider" }),
     router(
-      [navigator.home, articleList(db)],
+      [navigator.home, () => articleList(db)],
       [navigator.publishArticle, "publish article"],
       [navigator.publishDiscuss, "publish discuss"],
       [navigator.viewArticle, (url => getArticleBody(db, url.split("/")[3]))],
+      [navigator.settings, settings],
     ),
     sidetools(),
   )
