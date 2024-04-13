@@ -3,6 +3,7 @@ import { boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
 import { loc } from "../lib/router"
 import { flatCss } from "../lib/util"
+import { loading } from "./loading"
 
 function articleElement(art) {
   const viewArtURL = `/view/article/${art.hash}`
@@ -25,7 +26,7 @@ function articleElement(art) {
  */
 export function articleList(db) {
   return e("div").sub(boxPromise(
-    "loading...",
+    loading(),
     (async () => {
       await new Promise(r => setTimeout(r, 1000))
       const si = await db.siteInfo()

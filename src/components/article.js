@@ -5,6 +5,7 @@ import { parse } from "marked"
 import "github-markdown-css"
 import { flatCss } from "../lib/util"
 import { giscuss } from "./giscuss"
+import { loading } from "./loading"
 
 /**
  * 
@@ -15,7 +16,7 @@ import { giscuss } from "./giscuss"
 export function getArticleBody(db, id) {
   return e("div").sub(
     boxPromise(
-      "loading...",
+      loading(),
       (async () => {
         await new Promise(r => setTimeout(r, 1000))
         const art = (await db.siteInfo()).articles[id]
@@ -54,6 +55,7 @@ export function getArticleBody(db, id) {
         }
       })()
     ),
+    e("p"),
     giscuss(`article-${id}`),
   )
 }
