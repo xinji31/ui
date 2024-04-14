@@ -46,7 +46,9 @@ export class Database {
     this.siteInfo = cacheGetter(
       async () => {
         const url = new URL("site-info.json", baseURL)
-        return await (await fetch(url)).json()
+        return await (await fetch(url, {
+          cache: "no-cache",
+        })).json()
       }
     )
     this.blob = cacheGetter(
