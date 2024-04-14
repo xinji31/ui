@@ -1,3 +1,6 @@
+import "semantic-ui-css"
+import "semantic-ui-css/semantic.css"
+
 import { element as e } from "./lib/element"
 import { router } from "./lib/router"
 import { Database } from "./db"
