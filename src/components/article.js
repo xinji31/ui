@@ -1,11 +1,11 @@
 import { Database } from "../db"
-import { BoxComputed, BoxValue, boxPromise } from "../lib/box"
+import { boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
-import { parse } from "marked"
-import "github-markdown-css"
 import { flatCss } from "../lib/util"
 import { giscuss } from "./giscuss"
 import { loading } from "./loading"
+import { parse } from "marked"
+import "github-markdown-css"
 
 /**
  * 
@@ -20,19 +20,18 @@ export function getArticleBody(db, id) {
       (async () => {
         await new Promise(r => setTimeout(r, 1000))
         const art = (await db.siteInfo()).articles[id]
-        const type = art.path.match(/\.(md|pdf)$/)[1]
+        const artPath = `${art.hash}/file`
 
-        if (type === "md") {
+        if (art.type === "md") {
           const res = e("div").attr({
             class: "markdown-body"
           })
-          res.innerHTML = parse(await (await db.blob(`${art.hash}/${art.path}`)).text())
+          res.innerHTML = parse(await (await db.blob(artPath)).text())
           return res
         }
-        else if (type === "pdf") {
+        else if (art.type === "pdf") {
           return e("embed").attr({
             src: await (async () => {
-              const artPath = `${art.hash}/${art.path}`
               if (db.config.pdfRender === "browser") {
                 const blob = await db.blob(artPath)
                 const blobURL = URL.createObjectURL(blob.slice(0, blob.size, "application/pdf"))

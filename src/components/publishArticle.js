@@ -10,46 +10,73 @@ import { loc } from "../lib/router";
 export function publishArticle(db) {
   if (!db.config.gaToken) {
     return e("div").sub(
-      e("h4").sub("请先填写你的 Github Access Token"),
+      e("h4").sub("请先在设置中填写您的 Github Personal Access Token"),
       e("button").attr({
         class: "ui right labeled icon button",
-        click: () => loc.value = "/settings"
+        click: () => loc.value = "/settings",
       }).sub(
         e("i").attr({ class: "right arrow icon" }),
-        "前往"
+        "前往设置",
       )
     );
   }
 
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        let encoded = reader.result.toString().replace(/^.*,/, '')
+        let targetLength = Math.ceil(encoded.length / 4) * 4
+        encoded = encoded.padEnd(targetLength, "=")
+        if ((encoded.length % 4) > 0) {
+          encoded += '='.repeat(4 - (encoded.length % 4));
+        }
+        resolve(encoded);
+      };
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  function getFiletype(filename) {
+    if (filename.endsWith(".pdf"))
+      return "pdf"
+    if (filename.endsWith(".md"))
+      return "md"
+    throw Error("unsupported filetype")
+  }
+
   async function submitForm() {
-    let title = $("#title").val(),
-        time = Date.now(),
-        tags = $("#tags").val().split(',').map(s => s.trim()),
-        fileCode = await (async file => new Promise((res, rej) => {
-          const reader = new FileReader();
-          reader.readAsBinaryString(file);
-          reader.onload = () => res(btoa(reader.result))
-        }))(document.getElementById("file").files[0]),
-        fileExt = (path => path.substr(path.lastIndexOf('.') + 1))($("#file").val());
+    let title = $("#title").val()
+    let tags = $("#tags").val().split(',').map(s => s.trim())
+    let fileCode = await getBase64(document.getElementById("file").files[0])
+    let type = getFiletype($("#file").val())
 
-    let url = `https://api.github.com/repos/xinji31/book-test/contents/src/${title}.${fileExt}`,
-        message = `Add ${title} via 小绿书`,
-        description = JSON.stringify({ title, time, tags });
+    let url = `https://api.github.com/repos/xinji31/book-test/contents/file`
+    let message = `Add ${title} via 小绿书`
+    let description = JSON.stringify({ title, tags, type })
 
-    let sha = "";
-    try {
-      await $.ajax({
+    let sha = await new Promise((res, rej) => {
+      $.ajax({
         method: "GET",
         url,
         headers: {
           Authorization: `token ${db.config.gaToken}`
         },
-        success: (data) => { sha = data.sha; }
+        success: data => res(data.sha),
+        error: (jqXHR) => {
+          console.log(jqXHR)
+          if (jqXHR.status === 404) {
+            res()
+          } else {
+            rej(`发布失败：${jqXHR.status} ${jqXHR.statusText}, ${jqXHR.responseText}`)
+          }
+        }
       });
-    } catch (e) {}
-    
-    try {
-      await $.ajax({
+    })
+
+    await new Promise((res, rej) => {
+      $.ajax({
         method: "PUT",
         url,
         headers: {
@@ -58,31 +85,43 @@ export function publishArticle(db) {
         data: JSON.stringify({
           message: [message, description].join('\n\n'),
           content: fileCode,
-          sha
+          sha,
         }),
-        success: (data) => {
-          loc.value = `/view/article/${data.content.sha}`;
-        },
-        error: (jqXHR, textStatus, errorThrown) => {
-          console.error(jqXHR, textStatus, errorThrown);
-          alert(`发布失败：${jqXHR.status} ${jqXHR.statusText}, ${jqXHR.responseText}`);
-        }
+        success: res,
+        error: (jqXHR) => rej(`发布失败：${jqXHR.status} ${jqXHR.statusText}, ${jqXHR.responseText}`),
       });
-    } catch (e) {}
+    })
+
+    alert("发布成功！")
   }
 
-  return e("form").attr({ class: "ui form", submit: submitForm }).sub(
-    e("div").attr({ class: "field" }).sub(
-      e("label").sub("标题"),
-      e("input").attr({ type: "text", id: "title", placeholder: "文章标题", required: "" })
+  const field = (...p) => e("div").sub(...p).attr({
+    class: "field",
+  })
+  const label = (...p) => e("label").sub(...p)
+  const input = (attr) => e("input").attr(attr)
+
+  return e("form").attr({
+    class: "ui form",
+    submit: async (...p) => {
+      try {
+        await submitForm(...p)
+      } catch (err) {
+        alert(`发布失败: ${err.message}`)
+      }
+    },
+  }).sub(
+    field(
+      label("标题"),
+      input({ type: "text", id: "title", placeholder: "文章标题", required: "" }),
     ),
-    e("div").attr({ class: "field" }).sub(
-      e("label").sub("标签"),
-      e("input").attr({ type: "text", id: "tags", placeholder: "多个标签名请用半角逗号隔开" })
+    field(
+      label("标签"),
+      input({ type: "text", id: "tags", placeholder: "多个标签名请用半角逗号隔开" }),
     ),
-    e("div").attr({ class: "field" }).sub(
-      e("label").sub("文件"),
-      e("input").attr({ type: "file", id: "file", required: "" })
+    field(
+      label("文件"),
+      input({ type: "file", accept: ".pdf,.md", id: "file", required: "" })
     ),
     e("button").attr({ class: "ui button", type: "submit" }).sub("提交")
   );
