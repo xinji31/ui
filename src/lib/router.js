@@ -3,7 +3,7 @@ import { element } from "./element";
 
 function getLocFromHash() {
   let u = location.hash.split("#")[1]
-  if (u === "") {
+  if (u === "" || u === undefined) {
     u = "/"
   }
   return u
