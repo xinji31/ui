@@ -103,9 +103,11 @@ export function publishArticle(db) {
 
   return e("form").attr({
     class: "ui form",
+    onsubmit: "return false",
     submit: async (...p) => {
       try {
         await submitForm(...p)
+        loc.value = "/"
       } catch (err) {
         alert(`发布失败: ${err.message}`)
       }
