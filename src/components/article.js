@@ -5,6 +5,7 @@ import { flatCss } from "../lib/util"
 import { giscuss } from "./giscuss"
 import { loading } from "./loading"
 import { parse } from "marked"
+import dompurify from "dompurify"
 import "github-markdown-css"
 
 /**
@@ -26,7 +27,7 @@ export function getArticleBody(db, id) {
           const res = e("div").attr({
             class: "markdown-body"
           })
-          res.innerHTML = parse(await (await db.blob(artPath)).text())
+          res.innerHTML = dompurify.sanitize(parse(await (await db.blob(artPath)).text()))
           return res
         }
         else if (art.type === "pdf") {
