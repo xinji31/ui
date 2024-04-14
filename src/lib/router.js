@@ -2,7 +2,7 @@ import { BoxValue, BoxComputed } from "./box";
 import { element } from "./element";
 
 function getLocFromHash() {
-  let u = location.hash.slice(1)
+  let u = location.hash.split("#")[1]
   if (u === "") {
     u = "/"
   }
