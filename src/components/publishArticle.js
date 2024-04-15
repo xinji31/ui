@@ -2,6 +2,10 @@ import { element as e } from "../lib/element";
 import { Database } from "../db";
 import { loc } from "../lib/router";
 
+import "semantic-ui-css/components/button.css"
+import "semantic-ui-css/components/form.css"
+import "semantic-ui-css/components/icon.css"
+
 /**
  * 
  * @param {Database} db 

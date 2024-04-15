@@ -3,6 +3,9 @@ import { element as e } from "../lib/element"
 import { BoxComputed, BoxValue } from "../lib/box"
 import { loc } from "../lib/router"
 
+import "semantic-ui-css/components/icon.css"
+import "semantic-ui-css/components/button.css"
+
 const linkTo = href => (() => loc.value = href)
 const icon = name => e("i").attr({
   class: name + " icon",

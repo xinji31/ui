@@ -1,6 +1,3 @@
-import "semantic-ui-css"
-import "semantic-ui-css/semantic.css"
-
 import { element as e } from "./lib/element"
 import { router } from "./lib/router"
 import { Database } from "./db"
@@ -10,6 +7,11 @@ import { getArticleBody } from "./components/article"
 import { articleList } from "./components/articleList"
 import { publishArticle } from "./components/publishArticle"
 import { settings } from "./components/settings"
+
+import "semantic-ui-css/components/reset.css"
+import "semantic-ui-css/components/site.css"
+import "semantic-ui-css/components/container.css"
+import "semantic-ui-css/components/divider.css"
 
 const db = new Database()
 

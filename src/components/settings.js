@@ -1,6 +1,11 @@
 import { Database } from "../db";
 import { element as e } from "../lib/element";
 
+import "semantic-ui-css/components/dropdown"
+import "semantic-ui-css/components/dropdown.css"
+import "semantic-ui-css/components/transition"
+import "semantic-ui-css/components/transition.css"
+
 /**
  * 
  * @param {Database} db 
@@ -25,16 +30,6 @@ export function settings(db) {
     return e("select").attr(attr).sub(...sub).jq("dropdown")()
   }
   const option = (value, text) => e("option").attr({ value }).sub(text)
-
-  console.log(
-    dropdown({
-      value: db.config.pdfRender,
-      change: event => db.config.pdfRender = event.target.value
-    })(
-      option("browser", "browser (default)"),
-      option("pdfjs", "pdf.js"),
-    )
-  )
 
   return e("div").attr({
     class: "ui form",

@@ -5,6 +5,9 @@ import { loc } from "../lib/router"
 import { flatCss } from "../lib/util"
 import { loading } from "./loading"
 
+import "semantic-ui-css/components/button.css"
+import "semantic-ui-css/components/list.css"
+
 function articleElement(art) {
   const viewArtURL = `/view/article/${art.hash}`
   return e("li").attr({
