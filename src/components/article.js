@@ -19,9 +19,8 @@ export function getArticleBody(db, id) {
     boxPromise(
       loading(),
       (async () => {
-        await new Promise(r => setTimeout(r, 1000))
         const art = (await db.siteInfo()).articles[id]
-        const artPath = `${art.hash}/file`
+        const artPath = `${art.hash}/src/article`
 
         if (art.type === "md") {
           const res = e("div").attr({

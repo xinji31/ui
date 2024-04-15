@@ -28,7 +28,6 @@ export function articleList(db) {
   return e("div").sub(boxPromise(
     loading(),
     (async () => {
-      await new Promise(r => setTimeout(r, 1000))
       const si = await db.siteInfo()
       return e("ul").attr({
         class: "ui list"

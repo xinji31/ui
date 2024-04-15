@@ -11,11 +11,7 @@ import { articleList } from "./components/articleList"
 import { publishArticle } from "./components/publishArticle"
 import { settings } from "./components/settings"
 
-const repo = "book-test"
-const db = new Database(
-  `https://xinji31.github.io/${repo}/`,
-  `https://raw.githubusercontent.com/xinji31/${repo}/`,
-)
+const db = new Database()
 
 const navigator = {
   home: s => s === "/",

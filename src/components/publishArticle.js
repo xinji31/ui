@@ -52,20 +52,20 @@ export function publishArticle(db) {
     let fileCode = await getBase64(document.getElementById("file").files[0])
     let type = getFiletype($("#file").val())
 
-    let url = `https://api.github.com/repos/xinji31/book-test/contents/file`
+    let url = `https://api.github.com/repos/xinji31/book-test/contents/src/article`
     let message = `Add ${title} via 小绿书`
     let description = JSON.stringify({ title, tags, type })
+    let headers = {
+      Authorization: `token ${db.config.gaToken}`
+    }
 
     let sha = await new Promise((res, rej) => {
       $.ajax({
         method: "GET",
-        url,
-        headers: {
-          Authorization: `token ${db.config.gaToken}`
-        },
+        url: `${url}?ref=${db.config.branch}`,
+        headers,
         success: data => res(data.sha),
         error: (jqXHR) => {
-          console.log(jqXHR)
           if (jqXHR.status === 404) {
             res()
           } else {
@@ -79,10 +79,9 @@ export function publishArticle(db) {
       $.ajax({
         method: "PUT",
         url,
-        headers: {
-          Authorization: `token ${db.config.gaToken}`
-        },
+        headers,
         data: JSON.stringify({
+          branch: db.config.branch,
           message: [message, description].join('\n\n'),
           content: fileCode,
           sha,
