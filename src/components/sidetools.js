@@ -40,13 +40,13 @@ export function sidetools() {
         style: flatCss({
           display: "flex",
           flexDirection: "column",
-          height: new BoxComputed($ => $(expand) ? "21.428571428571427em" : "0"),
+          height: new BoxComputed($ => $(expand) ? "16.07143em" : "0"),
           overflow: "hidden",
           transitionDuration: "0.2s",
         })
       }).sub(
         button(linkTo("/")).sub(icon("home")),
-        button(linkTo("/publish/discuss")).sub(icon("comments")),
+        // button(linkTo("/publish/discuss")).sub(icon("comments")),
         button(linkTo("/publish/article")).sub(icon("pencil alternate")),
         button(linkTo("/settings")).sub(icon("cog")),
       ),
