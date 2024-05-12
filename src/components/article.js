@@ -6,7 +6,8 @@ import { giscuss } from "./giscuss"
 import { loading } from "./loading"
 import { parse } from "marked"
 import dompurify from "dompurify"
-
+import "katex/dist/katex.css"
+import renderMathInElement from "katex/contrib/auto-render"
 import "github-markdown-css/github-markdown-light.css"
 
 /**
@@ -28,6 +29,16 @@ export function getArticleBody(db, id) {
             class: "markdown-body"
           })
           res.innerHTML = dompurify.sanitize(parse(await (await db.blob(artPath)).text()))
+          renderMathInElement(
+            res,
+            {
+              delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false }
+              ],
+              throwOnError: false
+            }
+          )
           return res
         }
         else if (art.type === "pdf") {

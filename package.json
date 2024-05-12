@@ -16,6 +16,7 @@
     "github-markdown-css": "^5.5.1",
     "javascript-time-ago": "^2.5.10",
     "jquery": "^3.7.1",
+    "katex": "^0.16.10",
     "marked": "^12.0.1",
     "semantic-ui-css": "^2.5.0",
     "vite": "^5.2.8",
