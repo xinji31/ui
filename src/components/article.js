@@ -4,10 +4,10 @@ import { element as e } from "../lib/element"
 import { flatCss } from "../lib/util"
 import { giscuss } from "./giscuss"
 import { loading } from "./loading"
-import { parse } from "marked"
+import { marked } from "marked"
+import markedKatex from "marked-katex-extension"
 import dompurify from "dompurify"
 import "katex/dist/katex.css"
-import renderMathInElement from "katex/contrib/auto-render"
 import "github-markdown-css/github-markdown-light.css"
 
 /**
@@ -28,17 +28,10 @@ export function getArticleBody(db, id) {
           const res = e("div").attr({
             class: "markdown-body"
           })
-          res.innerHTML = dompurify.sanitize(parse(await (await db.blob(artPath)).text()))
-          renderMathInElement(
-            res,
-            {
-              delimiters: [
-                { left: '$$', right: '$$', display: true },
-                { left: '$', right: '$', display: false }
-              ],
-              throwOnError: false
-            }
-          )
+          marked.use(markedKatex({
+            throwOnError: false
+          }));
+          res.innerHTML = dompurify.sanitize(marked.parse(await (await db.blob(artPath)).text()))
           return res
         }
         else if (art.type === "pdf") {
