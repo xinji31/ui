@@ -25,6 +25,7 @@ function articleElement(art) {
       src: `https://github.com/${author}.png?size=40`,
       style: flatCss({
         borderRadius: "30px",
+        width: "40px",
       }),
     })
   )
