@@ -9,6 +9,7 @@ import "semantic-ui-css/components/button.css"
 import "semantic-ui-css/components/list.css"
 import "semantic-ui-css/components/label.css"
 
+import DateParser from "any-date-parser"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en"
 TimeAgo.addDefaultLocale(en)
@@ -81,7 +82,7 @@ function articleElement(art) {
     content(
       infoLine(
         authorLink(art.author),
-        displayTime(Date.parse(art.date))
+        displayTime(DateParser.fromString(art.date))
       ),
       title(art.title, `/view/article/${art.hash}`),
       tags(art.tags),

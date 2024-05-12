@@ -144,6 +144,8 @@ export function boxPromise(val, p) {
   const res = new BoxValue(val)
   p.then(r => {
     res.value = r
+  }, e => {
+    res.value = e
   })
   return res
 }

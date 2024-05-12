@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@rollup/plugin-inject": "^5.0.5",
+    "any-date-parser": "^1.5.4",
     "dompurify": "^3.1.0",
     "giscus": "^1.5.0",
     "github-markdown-css": "^5.5.1",
