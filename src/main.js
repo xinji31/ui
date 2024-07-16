@@ -39,9 +39,9 @@ document.querySelector("#app").sub(
     e("hr").attr({ class: "ui divider" }),
     router(
       [navigator.home, () => articleList(db)],
-      [navigator.publishArticle, () => publishArticle(db)],
+      [navigator.publishArticle, (_, props) => publishArticle(db, props)],
       [navigator.publishDiscuss, "publish discuss"],
-      [navigator.viewArticle, (url => getArticleBody(db, url.split("/")[3]))],
+      [navigator.viewArticle, url => getArticleBody(db, url.split("/")[3])],
       [navigator.settings, () => settings(db)],
     ),
     sidetools(),

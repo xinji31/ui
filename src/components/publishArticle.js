@@ -1,6 +1,6 @@
 import { element as e } from "../lib/element";
 import { Database } from "../db";
-import { loc } from "../lib/router";
+import { linkTo, loc } from "../lib/router";
 
 import "semantic-ui-css/components/button.css"
 import "semantic-ui-css/components/form.css"
@@ -11,7 +11,7 @@ import "semantic-ui-css/components/icon.css"
  * @param {Database} db 
  * @returns 
  */
-export function publishArticle(db) {
+export function publishArticle(db, props) {
   if (!db.config.gaToken) {
     return e("div").sub(
       e("h4").sub("请先在设置中填写您的 Github Personal Access Token"),
@@ -55,10 +55,11 @@ export function publishArticle(db) {
     let tags = $("#tags").val().split(',').map(s => s.trim())
     let fileCode = await getBase64(document.getElementById("file").files[0])
     let type = getFiletype($("#file").val())
+    let shadow = $("#shadow").val()
 
     let url = `https://api.github.com/repos/xinji31/book-test/contents/src/article`
     let message = `Add ${title} via 小绿书`
-    let description = JSON.stringify({ title, tags, type })
+    let description = JSON.stringify({ title, tags, type, shadow })
     let headers = {
       Authorization: `token ${db.config.gaToken}`
     }
@@ -94,8 +95,6 @@ export function publishArticle(db) {
         error: (jqXHR) => rej(`发布失败：${jqXHR.status} ${jqXHR.statusText}, ${jqXHR.responseText}`),
       });
     })
-
-    alert("发布成功！")
   }
 
   const field = (...p) => e("div").sub(...p).attr({
@@ -110,19 +109,38 @@ export function publishArticle(db) {
     submit: async (...p) => {
       try {
         await submitForm(...p)
-        loc.value = "/"
+        alert("发布成功！")
+        linkTo("/")()
       } catch (err) {
         alert(`发布失败: ${err.message}`)
       }
     },
   }).sub(
     field(
+      input({
+        type: "hidden",
+        id: "shadow",
+        value: props && props.shadow ? props.shadow : "",
+      }),
+    ),
+    field(
       label("标题"),
-      input({ type: "text", id: "title", placeholder: "文章标题", required: "" }),
+      input({
+        type: "text",
+        id: "title",
+        placeholder: "文章标题",
+        required: "",
+        value: props && props.title ? props.title : "",
+      }),
     ),
     field(
       label("标签"),
-      input({ type: "text", id: "tags", placeholder: "多个标签名请用半角逗号隔开" }),
+      input({
+        type: "text",
+        id: "tags",
+        placeholder: "多个标签名请用半角逗号隔开",
+        value: props && props.tags ? props.tags.join(",") : "",
+      }),
     ),
     field(
       label("文件"),

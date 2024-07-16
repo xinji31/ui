@@ -1,7 +1,7 @@
 import { Database } from "../db"
 import { boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
-import { loc } from "../lib/router"
+import { linkTo } from "../lib/router"
 import { flatCss } from "../lib/util"
 import { loading } from "./loading"
 
@@ -34,13 +34,14 @@ function articleElement(art) {
     e("a").attr({ href: `https://github.com/${author}` }).sub(author),
   )
   const displayTime = t => e("span").sub(timeAgo.format(t)).attr({
-    style: flatCss({
-      color: "grey",
-      marginLeft: "auto",
-    })
+    style: "color: grey;",
+  })
+  const updateLink = art => e("a").sub("update").attr({
+    click: linkTo("/publish/article", { shadow: art.hash, title: art.title, tags: art.tags }),
+    style: "color: grey; text-decoration: underline;",
   })
   const title = (t, url) => e("h2").sub(t).attr({
-    click: () => loc.value = url,
+    click: linkTo(url),
     style: flatCss({
       marginTop: "10px",
       width: "max",
@@ -56,7 +57,10 @@ function articleElement(art) {
       t,
     ))
   )
-  const infoLine = (author, time) => e("div").sub(author, time).attr({
+  const infoLine = (author, time, update) => e("div").sub(
+    author,
+    e("div").attr({ style: "margin-left: auto; color: grey; " }).sub(time, " | ", update),
+  ).attr({
     style: flatCss({
       display: "flex",
     })
@@ -82,7 +86,8 @@ function articleElement(art) {
     content(
       infoLine(
         authorLink(art.author),
-        displayTime(DateParser.fromString(art.date))
+        displayTime(DateParser.fromString(art.date)),
+        updateLink(art),
       ),
       title(art.title, `/view/article/${art.hash}`),
       tags(art.tags),

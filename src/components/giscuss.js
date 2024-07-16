@@ -8,7 +8,7 @@ import { loc } from "../lib/router"
  */
 export function giscuss(giscusId) {
   return new GiscusWidget().attr({
-    id: loc.value + "#spoiler",
+    id: loc.value.url + "#spoiler",
     repo: "xinji31/book",
     repoid: "R_kgDOLq9ULw",
     category: "Announcements",

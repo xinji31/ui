@@ -1,21 +1,56 @@
 import { BoxValue, BoxComputed } from "./box";
 import { element } from "./element";
 
+/**
+ * Location with props (like ?key=value)
+ * @typedef {Object} Loc
+ * @property {string} url
+ * @property {Object} props
+ */
+
+/**
+ * get loc from hash 
+ * @returns {Loc}
+ */
 function getLocFromHash() {
-  let u = location.hash.split("#")[1]
-  if (u === "" || u === undefined) {
-    u = "/"
+  const ls = location.hash.split("#")
+  return {
+    url: (() => {
+      if (ls[1] && ls[1] !== "") {
+        return ls[1]
+      } else {
+        return "/"
+      }
+    })(),
+    props: (() => {
+      try {
+        return JSON.parse(decodeURIComponent(ls[2]))
+      } catch (err) {
+        return undefined
+      }
+    })(),
   }
-  return u
 }
 
+
+/**
+ * @type {Loc}
+ */
 export const loc = new BoxValue(getLocFromHash())
 window.addEventListener("hashchange", () => {
   loc.value = getLocFromHash()
 })
-loc.addWeakBind(location, (ref, valueOld, valueNew) => {
-  ref.hash = "#" + valueNew
-})
+
+/**
+ * 
+ * @param {String} url 
+ * @param {Object} props 
+ */
+export function linkTo(url, props) {
+  return () => {
+    location.hash = "#" + url + (props ? "#" + encodeURIComponent(JSON.stringify(props)) : "")
+  }
+}
 
 /**
  * 
@@ -24,11 +59,11 @@ loc.addWeakBind(location, (ref, valueOld, valueNew) => {
  */
 export function router(...matchList) {
   return new BoxComputed($ => {
-    let u = $(loc)
+    let { url, props } = $(loc)
     for (const [kf, v] of matchList) {
-      if (kf(u)) {
+      if (kf(url)) {
         if (v instanceof Function) {
-          return v(u)
+          return v(url, props)
         } else {
           return v
         }
