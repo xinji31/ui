@@ -1,5 +1,4 @@
 import { BoxValue, BoxComputed } from "./box";
-import { element } from "./element";
 
 /**
  * Location with props (like ?key=value)

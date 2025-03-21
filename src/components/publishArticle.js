@@ -1,6 +1,6 @@
 import { element as e } from "../lib/element";
 import { Database } from "../db";
-import { linkTo, loc } from "../lib/router";
+import { linkTo } from "../lib/router";
 
 import "semantic-ui-css/components/button.css"
 import "semantic-ui-css/components/form.css"
@@ -17,7 +17,7 @@ export function publishArticle(db, props) {
       e("h4").sub("请先在设置中填写您的 Github Personal Access Token"),
       e("button").attr({
         class: "ui right labeled icon button",
-        click: () => loc.value = "/settings",
+        click: linkTo("/settings"),
       }).sub(
         e("i").attr({ class: "right arrow icon" }),
         "前往设置",
