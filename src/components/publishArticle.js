@@ -57,7 +57,7 @@ export function publishArticle(db, props) {
     let type = getFiletype($("#file").val())
     let shadow = $("#shadow").val()
 
-    let url = `https://api.github.com/repos/xinji31/book-test/contents/src/article`
+    let url = `https://api.github.com/repos/xinji31/book/contents/src/article`
     let message = `Add ${title} via 小绿书`
     let description = JSON.stringify({ title, tags, type, shadow })
     let headers = {
